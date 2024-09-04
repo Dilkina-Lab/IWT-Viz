@@ -4,3 +4,8 @@ ipyleaflet
 geopy
 faicons
 requests
+pandas
+rapidfuzz
+matplotlib
+geopandas
+fiona==1.9.6

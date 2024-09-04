@@ -39,7 +39,7 @@ def create_map():
     colormap = cm.LinearColormap(
         colors=['yellow', 'orange', 'red', 'darkred'],
         vmin=1,
-        vmax=25,
+        vmax=73,
         caption='Incident Counts'
     )
     colormap.add_to(m)
