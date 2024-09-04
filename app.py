@@ -236,6 +236,7 @@ def server(input, output, session):
     m.add(tile_layer)
 
     # Initialize the lines list
+    hidden_markers_dict = {}
     lines = []
     route_markers = []
     lines_info = []
@@ -559,6 +560,8 @@ def server(input, output, session):
         reset_map()
         if input.IWTcheckbox():
             # Attach the event handlers to the map
+            hidden_markers_dict.clear()
+
             iata_to_country = dict(zip(df['IATA'], df['country']))
             iwt_df['Source_Country'] = iwt_df['Source'].map(iata_to_country)
             iwt_df['Target_Country'] = iwt_df['Target'].map(iata_to_country)
@@ -583,6 +586,35 @@ def server(input, output, session):
                                 opacity=0.6
                             )
                             m.add(arrow)
+                            tooltip = f"{source_country} -> {target_country} [{row['IWT_Volume']}]"
+                                # print(tooltip)
+
+                            if source_country in hidden_markers_dict:
+                                # print("Marker exists at", source_coords)
+                                hidden_marker = hidden_markers_dict[source_country]
+                                final_tooltip = hidden_marker.title + f"\n" + tooltip
+                                hidden_marker.title = final_tooltip
+                            else:
+                                # source_coords
+                                source_hidden_marker = Marker(
+                                    location=source_coords,
+                                    opacity=0.5,  # Make the marker invisible,
+                                    draggable=False,
+                                    title=tooltip
+                                )
+                                m.add(source_hidden_marker)
+                                hidden_markers_dict[source_country] = source_hidden_marker
+
+
+                                # if regular_marker not in m.layers:
+                                #     m.add(regular_marker)
+                                #
+                                # route_markers.append(circle_marker)
+                                # route_markers.append(regular_marker)
+                                lines.append(arrow)
+
+                                m.on_interaction(handle_map_hover)
+                                m.on_interaction(handle_map_leave)
         render_base_map()  # Ensure the base map is rendered after flight paths
 
     @reactive.Effect
