@@ -55,13 +55,7 @@ third_highest = sorted_incidents[2] if len(sorted_incidents) > 2 else max(sorted
 sorted_values = sorted(country_df['incident_counts'].dropna(), reverse=True)
 third_highest_df = sorted_values[2] if len(sorted_values) > 2 else max(sorted_values)
 
-colormap_airport = cm.LinearColormap(
-    colors=['yellow', 'orange', 'red', 'darkred'],
-    vmin=1,
-    vmax=third_highest,
-    caption='Airport Incident Counts'
-)
-colormap_airport.text_color = "black"
+
 
 colormap_country = cm.LinearColormap(
     colors=['lightyellow', 'yellow', 'orange', 'red', 'darkred', 'brown'],
@@ -70,6 +64,15 @@ colormap_country = cm.LinearColormap(
     caption='Country Incident Counts'
 )
 colormap_country.text_color = "black"
+
+colormap_airport = cm.LinearColormap(
+    colors=['yellow', 'orange', 'red', 'darkred'],
+    vmin=1,
+    vmax=third_highest,
+    caption='Airport Incident Counts'
+)
+colormap_airport.text_color = "black"
+
 
 proper_name_mapping = {
     "dominican rep.": "dominican republic",
@@ -343,9 +346,12 @@ def server(input, output, session):
         if hasattr(map_obj, 'on_interaction'):
             # Remove the specific interaction callback or clear all
             map_obj.on_interaction(None)
+            
 
 
     def render_base_map():
+
+        #reset_map()
         
         metric_mapping = {
             "Overall Incidents": "incident_counts",
